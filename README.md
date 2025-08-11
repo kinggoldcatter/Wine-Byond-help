@@ -17,6 +17,14 @@ TODO: add more links for distros <br />
 ## I dont have audio on arch
 install `pipewire-alsa` or some equivalent make sure your audio driver is set to alsa and that should make it work
 
+## Lutris/Wine is not closing/opening after one launch
+webview2 brings with it the Microsoft Edge Updater which (randomly) starts itself and has a very peculiar senese of when it wants to close which blocks lutris/wine from closing and therefore opening again<br />
+<br />
+You have two simple solutions which both boil down to killing the Edge Updater <br />
+1. open the wine task manager (you can do this in lutris by pressing on the wine glass and pressing wine taskmanager) then go to processes and then end `MicrosoftEdgeUpdate.exe*32` <br />
+2. using your normal system task manager kill lutris/wine (depening on how you launch it) and then relaunch<br />
+after doing either of these you will be able to launch byond again without issue
+
 ## If you dont see your issue here please open a issue on this repo 
 I and others really dont mind helping people getting this setup
 
