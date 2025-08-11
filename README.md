@@ -3,8 +3,8 @@ A collection of tips and tricks for getting byond running on linux
 
 # Please do not use the default Proton-Ge wine provided with lutris
 webview2 requires patches made to wine in 10.5. Proton is based on 10.0, so until the wine patches are ported to GE or proton gets rebased to 11.0 please use a system wine instead
-to do so in lutris before running the install script please press the wine button on the left side tab<br />
-TODO: Add a picture for this 
+to do so in lutris before running the install script please press the wine button on the left side tab<br /> <br />
+TODO: Add a picture for this <br /> <br />
 and then select system wine as default<br />
 make sure the wine is newer then 10.5 if it is not please google your distro's guide for installing wine to update it (we suggest using staging-wine while you are at it)<br />
 TODO: add guides for bottles and other installers<br />
