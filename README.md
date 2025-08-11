@@ -16,6 +16,7 @@ TODO: add more links for distros
 ## I dont have audio on arch
 install `pipewire-alsa` or some equivalent make sure your audio driver is set to alsa and that should make it work
 
-# If you dont see your issue here please open a issue on this repo 
+## If you dont see your issue here please open a issue on this repo 
+I and others really dont mind helping people getting this setup
 
 # TODO: guide for setting up default prefix and vscode dev enviroment
