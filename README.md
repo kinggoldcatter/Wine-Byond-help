@@ -1,6 +1,8 @@
 # Wine-Byond-help
 A collection of tips and tricks for getting byond running on linux
 
+This guide is mostly based on [Lutris](https://lutris.net/games/byond/) for now however more general and other installers are planned (feel free to pr) 
+
 # Please do not use the default Proton-Ge wine provided with lutris
 ## (note: the current lutris script should do this for you)
 if not please log an issue and attempt the manuel download as described<br />
