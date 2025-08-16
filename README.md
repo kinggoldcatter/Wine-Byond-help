@@ -29,6 +29,10 @@ after doing either of these you will be able to launch byond again without issue
 <br /><br />
 TODO: there is a script and some other ways to deal with this look into it and add them as the "hard way"
 
+## mangohud does not work!
+byond is 32 bit you need the 32 bit mango hud to have it work<br />
+if you have it installed make sure dxvk is enabled some older installers disable it for byond
+
 ## If you dont see your issue here please open a issue on this repo 
 I and others really dont mind helping people getting this setup
 
