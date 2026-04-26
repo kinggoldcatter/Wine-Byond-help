@@ -16,7 +16,9 @@ runner: wine
 script:
   files:
   - installer: https://www.byond.com/download/build/516/516.1667_byond.exe
-  - webview2: ""
+  - webview2:
+        url: https://go.microsoft.com/fwlink/?linkid=2099617
+        filename: MicrosoftEdgeWebView2RuntimeInstallerX86.exe
   game:
     exe: drive_c/Program Files (x86)/BYOND/bin/byond.exe
     prefix: $GAMEDIR
