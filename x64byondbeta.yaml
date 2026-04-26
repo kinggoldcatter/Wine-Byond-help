@@ -43,6 +43,15 @@ script:
       description: Installing fonts with Winetricks
       name: winetricks
       prefix: $GAMEDIR
+      
+  - task:
+      description: setting msedgewebview2.exe to win7 (Wine Work-Around)
+      key: version
+      name: set_regedit
+      path: HKEY_CURRENT_USER\Software\Wine\AppDefaults\msedgewebview2.exe
+      prefix: $GAMEDIR
+      type: REG_SZ
+      value: win7
 
   - task:
       args: /install
