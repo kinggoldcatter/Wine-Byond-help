@@ -7,13 +7,16 @@ name: BYOND
 notes: "Requires Wine 10.5+ (may fail first time if Lutris had to install wine version).\
   \ Servers made for versions before 515 don't work well if at all. This does allow\
   \ TGUI to work with Wine, however older servers without TGUI may work better with\
-  \ the older installers.\r\nHere is a repo to track other common issues and guides\
-  \ for setting some things up\r\nhttps://github.com/kinggoldcatter/Wine-Byond-help"
+  \ the older installers \r\nBy Default; the script runs without DXVK (due to graphical issues)\
+  \ if your gpu doesn't support EGL; then you can enable DXVK with winetricks.\r\n \
+  \ \r\nHere is a repo to track other common issues and guides\
+  \ for setting some things up\r\nhttps://github.com/kinggoldcatter/Wine-Byond-help\
+  \ \r\nhow to get Webview2 Evergreen (x86)\r\nhttps://developer.microsoft.com/en-us/microsoft-edge/webview2/"
 runner: wine
 script:
   files:
-  - installer: http://www.byond.com/download/build/516/516.1667_byond.exe
-  - webview2: https://github.com/aedancullen/webview2-evergreen-standalone-installer-archive/releases/download/109.0.1518.78/MicrosoftEdgeWebView2RuntimeInstallerX64.exe
+  - installer: https://www.byond.com/download/build/516/516.1667_byond.exe
+  - webview2: ""
   game:
     exe: drive_c/Program Files (x86)/BYOND/bin/byond.exe
     prefix: $GAMEDIR
@@ -38,30 +41,20 @@ script:
       description: Installing fonts with Winetricks
       name: winetricks
       prefix: $GAMEDIR
+
   - task:
-      app: dxvk
-      description: Installing dxvk with Winetricks
-      name: winetricks
-      prefix: $GAMEDIR
-  - task:
-      description: setting msedgewebview2.exe to win7
-      key: version
-      name: set_regedit
-      path: HKEY_CURRENT_USER\Software\Wine\AppDefaults\msedgewebview2.exe
-      prefix: $GAMEDIR
-      type: REG_SZ
-      value: win7
-  - task:
-      args: /silent /install
-      description: Installing Webview2 (may take a moment)
+      args: /install
+      description: Installing Webview2 (if nothing appears, you have to install this yourself)
       exclude_processes: MicrosoftEdgeUpdate.exe
       executable: webview2
       name: wineexec
       prefix: $GAMEDIR
+
   - task:
       description: Terminating MicrosoftEdgeUpdate.exe...
       name: winekill
       prefix: $GAMEDIR
+
   - task:
       args: /S
       description: Installing BYOND
@@ -75,6 +68,7 @@ script:
       executable: $GAMEDIR/drive_c/Program Files (x86)/BYOND/directx/DXSETUP.exe
       name: wineexec
       prefix: $GAMEDIR
+
 slug: byond-v5161667
 steamid: null
 version: v516.1667
