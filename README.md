@@ -28,7 +28,7 @@ TODO: add more links for distros <br />
 # Installing a 32-bit prefix with lutris
 32-bit prefix support for wine is slowly being deprecated and breaks alot of things. However wow64 doubles webview2's already high RAM usage so this is a temporary workaround until Wine fixes whatever bug causes webview to eat all of the ram<br />
 <br />
-First install a Wine binary with 32-bit prefix support I used this one [Arch Linux WINE-TKG NTSYNC WIN32 CI](https://github.com/JND94/wine-tkg-git/actions/workflows/wine-arch-ntsync-win32.yml)  and it seems alright<br />
+First install a Wine binary with 32-bit prefix support (The one I previously suggested is no longer up to date if you find a good one please make a merge request to add it here :) )
 (no fsync or esync support but they break byond sometimes anyway)<br />
 <img width="1661" height="628" alt="image" src="https://github.com/user-attachments/assets/c0e84f00-fa0f-4ede-957f-a3e48ec7cb5e" /><br />
 Click the newest one <br />
