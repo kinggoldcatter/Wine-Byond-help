@@ -7,13 +7,18 @@ name: BYOND
 notes: "Requires Wine 10.5+ (may fail first time if Lutris had to install wine version).\
   \ Servers made for versions before 515 don't work well if at all. This does allow\
   \ TGUI to work with Wine, however older servers without TGUI may work better with\
-  \ the older installers.\r\nHere is a repo to track other common issues and guides\
-  \ for setting some things up\r\nhttps://github.com/kinggoldcatter/Wine-Byond-help"
+  \ the older installers \r\nBy Default; the script runs without DXVK (due to graphical issues)\
+  \ if your gpu doesn't support EGL; then you can enable DXVK with winetricks.\r\n \
+  \ \r\nHere is a repo to track other common issues and guides\
+  \ for setting some things up\r\nhttps://github.com/kinggoldcatter/Wine-Byond-help\
+  \ \r\nhow to get Webview2 Evergreen (x86)\r\nhttps://developer.microsoft.com/en-us/microsoft-edge/webview2/"
 runner: wine
 script:
   files:
-  - installer: http://www.byond.com/download/build/516/516.1667_byond.exe
-  - webview2: N/A:Evergreen Standalone Installer x86 downloaded from https://developer.microsoft.com/en-us/microsoft-edge/webview2
+  - installer: https://www.byond.com/download/build/516/516.1667_byond.exe
+  - webview2:
+        url: https://go.microsoft.com/fwlink/?linkid=2099617
+        filename: MicrosoftEdgeWebView2RuntimeInstallerX86.exe
   game:
     arch: win32
     exe: drive_c/Program Files/BYOND/bin/byond.exe
@@ -44,12 +49,6 @@ script:
       prefix: $GAMEDIR
   - task:
       arch: win32
-      app: dxvk
-      description: Installing dxvk with Winetricks
-      name: winetricks
-      prefix: $GAMEDIR
-  - task:
-      arch: win32
       description: setting msedgewebview2.exe to win7
       key: version
       name: set_regedit
@@ -59,7 +58,7 @@ script:
       value: win7
   - task:
       arch: win32
-      description: Installing Webview2
+      description: Installing Webview2 (if nothing appears, this failed!)
       exclude_processes: MicrosoftEdgeUpdate.exe
       executable: webview2
       name: wineexec
