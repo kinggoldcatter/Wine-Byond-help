@@ -28,18 +28,8 @@ TODO: add more links for distros <br />
 # Installing a 32-bit prefix with lutris
 32-bit prefix support for wine is slowly being deprecated and breaks alot of things. However wow64 doubles webview2's already high RAM usage so this is a temporary workaround until Wine fixes whatever bug causes webview to eat all of the ram<br />
 <br />
-First install a Wine binary with 32-bit prefix support (The one I previously suggested is no longer up to date if you find a good one please make a merge request to add it here :) )
-(no fsync or esync support but they break byond sometimes anyway)<br />
-<img width="1661" height="628" alt="image" src="https://github.com/user-attachments/assets/c0e84f00-fa0f-4ede-957f-a3e48ec7cb5e" /><br />
-Click the newest one <br />
-<img width="1882" height="660" alt="image" src="https://github.com/user-attachments/assets/7ded67f4-61cb-4761-ae99-4827eac8f6c3" /><br />
-download the "artifact" you will need to then unzip it twice first a .zip and then a .tar.zst most distros can do this by default.<br />
-<img width="1056" height="659" alt="image" src="https://github.com/user-attachments/assets/bb38f10a-dd32-4551-bfce-2f193e092511" /><br />
-click on the gear next to Wine then in runner iptions set Wine Version to Custom. Finally select the wine binary from the package you just downloaded<br />
-in my case it was at `~/Downloads/wine-tkg-staging-ntsync-git-10.13.r0.ga8a6d7b0-327-x86_64.pkg/usr/bin/wine`<br /> 
-You will now be able to Use the 32-bit version of the lutris installer. <br />
-<img width="851" height="506" alt="image" src="https://github.com/user-attachments/assets/da3b819e-f7cd-41d8-8b98-66143aa47e09" /><br />
-(while we wait for it to be approved by lutris staff please press the + at the top of the lutris screen and then use the `32bitbyond.yaml` found in this repo.)
+First install a Wine binary with 32-bit prefix support (The one I previously suggested is no longer up to date if you find a good one please make a merge request to add it here :) ) <br />
+then just use the 32 bit yaml at the top (if lutris deprecates 32 support completely you will need to follow the steps of the script manually)
 
 
 
