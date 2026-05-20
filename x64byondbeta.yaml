@@ -66,6 +66,10 @@ script:
       name: winekill
       prefix: $GAMEDIR
 
+  - execute:
+      description: Sanity checking webview2..
+      command: find "$GAMEDIR/drive_c/" -iname msedgewebview2.exe | grep .
+
   - task:
       args: /S
       description: Installing BYOND
@@ -79,6 +83,10 @@ script:
       executable: $GAMEDIR/drive_c/Program Files (x86)/BYOND/directx/DXSETUP.exe
       name: wineexec
       prefix: $GAMEDIR
+      
+  - execute:
+      description: Sanity Checking BYOND...
+      command: test -f "$GAMEDIR/drive_c/Program Files (x86)/BYOND/bin/byond.exe"
 
 slug: byond-v5161667
 steamid: null
