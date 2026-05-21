@@ -20,9 +20,10 @@ script:
         url: https://go.microsoft.com/fwlink/?linkid=2124701
         filename: MicrosoftEdgeWebView2RuntimeInstallerX64.exe
   game:
-    exe: drive_c/Program Files (x86)/BYOND/bin/byond.exe
+    exe: $GAMEDIR/drive_c/Program Files (x86)/BYOND/bin/byond.exe
     prefix: $GAMEDIR
   installer:
+  
   - task:
       description: Creating prefix (may fail if Wine was just installed) you do NOT
         need mono
@@ -43,7 +44,6 @@ script:
       description: Installing fonts with Winetricks
       name: winetricks
       prefix: $GAMEDIR
-      
   - task:
       description: setting msedgewebview2.exe to win7 (Wine Work-Around)
       key: version
@@ -52,7 +52,6 @@ script:
       prefix: $GAMEDIR
       type: REG_SZ
       value: win7
-
   - task:
       args: /install
       description: Installing Webview2 (if nothing appears, you have to install this yourself)
@@ -60,12 +59,10 @@ script:
       executable: webview2
       name: wineexec
       prefix: $GAMEDIR
-
   - task:
       description: Terminating MicrosoftEdgeUpdate.exe...
       name: winekill
       prefix: $GAMEDIR
-
   - task:
       args: /S
       description: Installing BYOND
