@@ -119,8 +119,8 @@ This is kinda a bug with wine where the byond pager dosent open by default lucki
 <img width="265" height="132" alt="image" src="https://github.com/user-attachments/assets/b666e741-eb86-494d-bdd1-9e7e5b20821e" />
 <br />is actully a bar icon for opening the pager just click the small blue icon and the pager will open allowing you to play your games
 
-## I run byond on a traditional WM (Plasma/Gnome/Cosmic/ect) but all that apperas is an Icon on the task bar!!!
-is is kinda a bug with wine where the byond pager dosent open by default luckily that small icon lets you open the pager by just pressing it so just press it and you can play!
+## I run byond on a traditional WM (Plasma/Gnome/Cosmic/ect) and all that appears is an Icon on the task bar/BYOND fades out and doesn't open a new window after loading screen!!!
+It is kinda a bug with wine where the BYOND pager dosent open by default. Luckily, that small icon lets you open the pager by just pressing it, so just press it and you can play!
 
 
 ## If you dont see your issue here please open a issue on this repo 
