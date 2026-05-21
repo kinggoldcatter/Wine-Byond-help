@@ -21,7 +21,7 @@ script:
         filename: MicrosoftEdgeWebView2RuntimeInstallerX86.exe
   game:
     arch: win32
-    exe: drive_c/Program Files/BYOND/bin/byond.exe
+    exe: $GAMEDIR/drive_c/Program Files/BYOND/bin/byond.exe
     prefix: $GAMEDIR
   installer:
   - task:
