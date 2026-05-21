@@ -2,9 +2,9 @@
 A collection of tips and tricks for getting byond running on linux<br />
 
 This guide is mostly based on the [Lutris](https://lutris.net/games/byond/) installer for now however more general and other installers are planned (feel free to pr) 
-
+## If you are running into issues with the lutris install script feel free to PR  <br /> HOWEVER please also check if the x64byond.yaml works as it is normally more up to date and less in danger to being broken by random edits
 # Please do not use the default Proton-Ge wine provided with lutris
-## (The latest ge 10-29 works and so does wine 11.0 also works however wine 11.1 has broken alot of window rendering)
+## (The latest ge 10-34 does not apper to work; last tested 10-29 does work but vanilla 11.9+ wine is recommended)
 Ill do some testing with em wine and such later you can test it youself using the newly fixed x64byondbeta <br />
 webview2 requires patches made to wine in 10.5. Proton is based on 10.0, so until the wine patches are ported to GE or proton gets rebased to 11.0 please use a system wine instead
 <br /> <br />
