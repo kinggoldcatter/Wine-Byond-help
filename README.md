@@ -121,6 +121,7 @@ This is kinda a bug with wine where the byond pager dosent open by default lucki
 
 ## I run byond on a traditional WM (Plasma/Gnome/Cosmic/ect) and all that appears is an Icon on the task bar/BYOND fades out and doesn't open a new window after loading screen!!!
 It is kinda a bug with wine where the BYOND pager dosent open by default. Luckily, that small icon lets you open the pager by just pressing it, so just press it and you can play!
+<img width="581" height="135" alt="image" src="https://github.com/user-attachments/assets/688a4e07-c7c7-4a1f-9380-fc5ee4ac50ec" />
 
 
 ## If you dont see your issue here please open a issue on this repo 
