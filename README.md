@@ -123,6 +123,10 @@ This is kinda a bug with wine where the byond pager dosent open by default lucki
 It is kinda a bug with wine where the BYOND pager dosent open by default. Luckily, that small icon lets you open the pager by just pressing it, so just press it and you can play!
 <img width="581" height="135" alt="image" src="https://github.com/user-attachments/assets/688a4e07-c7c7-4a1f-9380-fc5ee4ac50ec" />
 
+## The Script just fails when installing byond/VCrun!!! 
+we do not have a real good solution for this if we are honsest but most of the time it appears this is usally an issue with your proton/wine version or your winetricks version. so try swapping between proton and wine versions I try to keep the note at the top of this file up to date with a version of proton ge that works. winetricks is a bit more tricky try updating it first in your package manager and then enable system wine tricks in lutris <br />
+<img width="848" height="640" alt="Pasted image (5)" src="https://github.com/user-attachments/assets/982ec9c7-ad22-4335-b7d1-c172b106fe70" />
+<br /> then make sure you have the latest wine tricks ***USUALLY*** your package manager of choice will have it but please look on their [github](https://github.com/Winetricks/winetricks) to make sure if the one your system provides does not work, manully place the winetricks from thier git in your bin folder.
 
 ## If you dont see your issue here please open a issue on this repo 
 I and others really dont mind helping people getting this setup
