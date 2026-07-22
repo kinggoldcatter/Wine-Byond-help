@@ -128,6 +128,9 @@ we do not have a real good solution for this if we are honsest but most of the t
 <img width="848" height="640" alt="Pasted image (5)" src="https://github.com/user-attachments/assets/982ec9c7-ad22-4335-b7d1-c172b106fe70" />
 <br /> then make sure you have the latest wine tricks ***USUALLY*** your package manager of choice will have it but please look on their [github](https://github.com/Winetricks/winetricks) to make sure if the one your system provides does not work, manully place the winetricks from thier git in your bin folder.
 
+## There are extra black unclosable windows on Goon / Other!!
+this is a bug in wine (https://bugs.winehq.org/show_bug.cgi?id=59932) fixed in verison 11.13. It was apprently not present in wine 9.0 but due to the lack of webview2 fixes in older versions I suggest just trying to change to a version with the nessary 11.13 fix.
+
 ## If you dont see your issue here please open a issue on this repo 
 I and others really dont mind helping people getting this setup
 
