@@ -19,10 +19,15 @@ script:
   - webview2:
         url: https://go.microsoft.com/fwlink/?linkid=2099617
         filename: MicrosoftEdgeWebView2RuntimeInstallerX86.exe
+  - smolfont:
+        url: https://raw.githubusercontent.com/unknownpedestrian/Byond-install/font-patch/extra/fonts/smalle.zip
+        filename: smalle.zip
+
   game:
     arch: win32
     exe: $GAMEDIR/drive_c/Program Files/BYOND/bin/byond.exe
     prefix: $GAMEDIR
+
   installer:
   - task:
       arch: win32
@@ -47,6 +52,22 @@ script:
       description: Installing fonts with Winetricks
       name: winetricks
       prefix: $GAMEDIR
+
+  - extract:
+      description: Extracting Small Fonts
+      file: smolfont
+      dst: $GAMEDIR/drive_c/windows/Fonts/
+      
+  - task:
+      description: Adding Small Fonts to Registry 
+      key: Small Fonts (VGA res)
+      name: set_regedit
+      path: HKEY_LOCAL_MACHINE\Software\Microsoft\Windows NT\CurrentVersion\Fonts
+      prefix: $GAMEDIR
+      type: REG_SZ
+      value: C:\\Windows\\Fonts\\smalle.fon
+     
+
   - task:
       arch: win32
       description: setting msedgewebview2.exe to win7
