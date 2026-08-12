@@ -20,7 +20,7 @@ script:
         url: https://go.microsoft.com/fwlink/?linkid=2099617
         filename: MicrosoftEdgeWebView2RuntimeInstallerX86.exe
   - smolfont:
-        url: https://raw.githubusercontent.com/unknownpedestrian/Byond-install/font-patch/extra/fonts/smalle.zip
+        url: hhttps://raw.githubusercontent.com/kinggoldcatter/Wine-Byond-help/master/extra/fonts/smalle.zip
         filename: smalle.zip
 
   game:
