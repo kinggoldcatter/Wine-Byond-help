@@ -3,8 +3,8 @@ A collection of tips and tricks for getting byond running on linux<br />
 
 This guide is based on the [Lutris](https://lutris.net/games/byond/) installer
 ## If you are running into issues with the lutris install script, check if the x64byond.yaml works, as it is normally more up to date.<br > 
-# Please do not use the default Proton-Ge wine provided with lutris, Use wine 11.14 (staging)
-webview2 requires patches made to wine in 10.5. Proton is based on 10.0, so until the wine patches are ported to GE or proton gets rebased to 11.0, please use a system wine (11.14) instead.
+# Please do not use the default Proton-Ge wine provided with lutris, Use a wine version greater then or equal to 10.8 
+webview2 requires patches made to wine in 10.5. Proton is based on 10.0, so until the wine patches are ported to GE or proton gets rebased to 11.0, please use a system wine instead.
 <br /> <br />
 ![wine_select](images/wine_select.png)
 <br /> <br />
@@ -27,7 +27,7 @@ TODO: add guides for bottles and other installers<br />
 
 
 # Setting up Visual Studio Code develeopment.
-Byond on wine  works well enough for development. 
+Byond on wine works well enough for development. 
 Please note:
 * VSC was tested on **wine 11.14 staging**
 * Debugging and breakpoints work only up to **byond version 516.667**. [Extension github](https://github.com/SpaceManiac/SpacemanDMM)
