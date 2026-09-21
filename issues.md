@@ -98,3 +98,31 @@ this is a bug in wine (https://bugs.winehq.org/show_bug.cgi?id=59932) fixed in v
 
 ## If you dont see your issue here please open a issue on this repo 
 I and others really dont mind helping people getting this setup
+
+# Visual studio code development issues
+
+## Everything compiles but it closes immediatly when launching without an error.
+Extension cant find wine prefix
+* follow steps 1 - 4 from [Setting up launch json](README.md#launchjson-and-correct-wine-prefix) to add correct prefix.
+* to verify the path atleast exist, try 
+    ```bash
+    ls "<insert path in quotes here>"
+    ```
+
+##  Could not find the task 'dm: build - name.dme'
+Extension cant find byond directory.
+* follow steps 2 - 6 in [extensions and settings](README.md#setting-up-visual-studio-code-develeopment) to set correct byond path.
+* to verify the path atleast exist, try 
+    ```bash
+    ls "<insert path in quotes here>"
+    ```
+
+## execvp(3) failed.: No such file or directory
+binfmt.d cant find the correct wine path.
+* Make sure /etc/binfmt.d/wine.conf follows the correct format **:DOSWIN:M::MZ::/your/path/bin/wine:** - mind the colon at the end.
+* use absolute pathing only. ~/..../bin/wine -> **/var/home/username**/..../bin/wine
+* see if wine is installed differently with:
+    ```bash
+    which wine
+    ```
+* If installing wine from lutris, then use the correct path to it. Usually there are a few options in **~/.local/lutris/runners/wine/**. pick the one used to setup byond. Remember to **remove ~ and replace with absolute homefolder path**
