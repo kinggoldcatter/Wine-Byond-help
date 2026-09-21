@@ -112,8 +112,8 @@ There is an [DMI extension for aseprite](https://github.com/spacestation13/asepr
 2. In lutris, click the plus icon and add install windows game from executable.
 3. Set the name to aseprite and click install  and continue several times.
 4. For "Select the setup file",  choose the compiled or downloaded aseprite windows installer 'Aseprite-*.exe'
-5. Thats it, aseprite isn't as picky as byond'
-## install Aseprite extension
+5. Thats it, aseprite isn't as picky as byond.
+## Installing the Aseprite extension
 1. Download the latest [dmi extension](https://github.com/spacestation13/aseprite-dmi/releases/) for windows. It should be **aseprite-dmi-windows.aseprite-extension** 
 2. Open aseprite in lutris
 3. go to Edit > Preferences > Extensions
