@@ -65,6 +65,13 @@ script:
       value: C:\\Windows\\Fonts\\smalle.fon
 
   - task:
+      args: /install
+      description: Installing Webview2 (if nothing appears, you have to install this yourself)
+      exclude_processes: MicrosoftEdgeUpdate.exe
+      executable: webview2
+      name: wineexec
+      prefix: $GAMEDIR
+  - task:
       description: setting msedgewebview2.exe to win7 (Wine Work-Around)
       key: version
       name: set_regedit
@@ -72,13 +79,6 @@ script:
       prefix: $GAMEDIR
       type: REG_SZ
       value: win7
-  - task:
-      args: /install
-      description: Installing Webview2 (if nothing appears, you have to install this yourself)
-      exclude_processes: MicrosoftEdgeUpdate.exe
-      executable: webview2
-      name: wineexec
-      prefix: $GAMEDIR
   - task:
       description: Terminating MicrosoftEdgeUpdate.exe...
       name: winekill
