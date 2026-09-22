@@ -104,3 +104,18 @@ try to launch the game, if you get an **OS ERROR 8**, you need to setup binfmt_m
     # enabled 
     ```
 4. try to compile and launch game through vsc, report issues to this github.
+
+# Installing aseprite with DMI extension   
+There is an [DMI extension for aseprite](https://github.com/spacestation13/aseprite-dmi) that only works on windows. You can run it by using lutris with relativly little pain.
+## Setup aseprite
+1. [download](https://www.aseprite.org/buy/) or [compile](https://github.com/theguywhoslate/aseprite-builder) the **LATEST** aseprite installer for windows.
+2. In lutris, click the plus icon and add install windows game from executable.
+3. Set the name to aseprite and click install  and continue several times.
+4. For "Select the setup file",  choose the compiled or downloaded aseprite windows installer 'Aseprite-*.exe'
+5. Thats it, aseprite isn't as picky as byond.
+## Installing the Aseprite extension
+1. Download the latest [dmi extension](https://github.com/spacestation13/aseprite-dmi/releases/) for windows. It should be **aseprite-dmi-windows.aseprite-extension** 
+2. Open aseprite in lutris
+3. go to Edit > Preferences > Extensions
+4. Click add extensions and then choose aseprite-dmi-windows.aseprite-extension in file explorer.
+5. If any alerts pop up check give full trust to this script. and then finally apply on the extension window.
