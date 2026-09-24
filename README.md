@@ -88,13 +88,13 @@ It should look something like this:
 }
 ```
 ## checking if binfmt_misc is working.
-try to launch the game, if you get an **OS ERROR 8**, you need to setup binfmt_misc to open exe's. **this guide works with Debian**, On other systems, it might be different.
+try to launch the game, if you get an **OS ERROR 8/cannot execute binary**, you need to setup binfmt_misc to open exe's. **this guide works with Debian**, On other systems, it might be different.
 1. ensure binfmt_misc is operational 
     ```bash
     cat /proc/sys/fs/binfmt_misc/status 
     # enabled
     ```
-2. configure exe to use wine and restart binfmt service
+2. configure exe to use wine and restart binfmt service, if using different wine installation replace with correct winepath.
     ```bash
     echo :DOSWin:M::MZ::/usr/bin/wine: | sudo tee  /etc/binfmt.d/wine.conf && sudo systemctl restart systemd-binfmt
     ```
@@ -102,7 +102,8 @@ try to launch the game, if you get an **OS ERROR 8**, you need to setup binfmt_m
     ```bash
     cat /proc/sys/fs/binfmt_misc/DOSWin
     # enabled 
-    ```
+
+### for issues, check [visual studio code troubleshooting](issues.md#visual-studio-code-development-issues) or open an issue on github
 4. try to compile and launch game through vsc, report issues to this github.
 
 # Installing aseprite with DMI extension   
