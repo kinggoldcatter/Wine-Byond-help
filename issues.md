@@ -35,7 +35,7 @@ There is two solutions.<br />
 
 
 ## Mangohud does not work!
-byond is 32 bit you need the 32 bit mango hud to have it work<br />
+Byond is 32 bit you need the 32 bit mango hud to have it work<br />
 if you have it installed make sure dxvk is enabled some older installers disable it for byond
 
 ## Bad FPS on Nividia cards
@@ -45,7 +45,7 @@ this has also been noted to sometimes cause flickering in tguis
 ## Nothing is rendering!!
 not sure the cause of this but the easiest try disabling esync and fsync; exiting full-screen also seems to help sometimes. <br />
 If those did not fix it or if you want a more stable solution [ntsync](https://docs.kernel.org/next/userspace-api/ntsync.html) has been found to a fix it as well. <br />
-If your kernel is newer then 6.15 it is as simple as `# modprobe ntsync` and having a ntsync patched wine (the lutris script has this by default.) this will only enable it until you restart your computer but all distros have solutions for permanent module loading <br />
+If your kernel is newer then 6.15 it is as simple as `# modprobe ntsync` and having a ntsync patched wine (the Lutris script has this by default.) this will only enable it until you restart your computer but all distros have solutions for permanent module loading <br />
 <br />
 Here is some instructions for working with modules:<br />
 [Arch](https://wiki.archlinux.org/title/Kernel_module)<br />
@@ -67,25 +67,25 @@ There is two "solutions." <br />
 [Mint](https://forums.linuxmint.com/viewtopic.php?t=284301)<br />
 <br />
 
-2. if you dont care about spaceman dm breaking or using deprecated features using a 32-bit prefix will cut that 9.5 gib ram footprint in half! This may still not be enough but it is a nice savings.<br />
-scroll up to 'Installing a 32-bit prefix with lutris' and follow that.<br />
+2. if you do not care about spaceman dm breaking or using deprecated features using a 32-bit prefix will cut that 9.5 gib ram footprint in half! This may still not be enough but it is a nice savings.<br />
+scroll up to 'Installing a 32-bit prefix with Lutris' and follow that.<br />
 
 TODO: add manuel install instructions for 32-bit<br />
 TODO: make winehq bug report<br />
 
 ## I Cant reach the Client/Server/Reconnect menu!
-The button is windows only, for (some) tg and bay forks you can just press F1 on your keyboard to open it (Works in full screen as well!) 
+The button is windows only, for (some) TG and bay forks you can just press F1 on your keyboard to open it (Works in full screen as well!) 
 <br /> 
 For CM you should be able to use .options (may work for other forks? just try it)
 
 ## I run byond on a tiling WM (niri/hyperland/sway/ect) but all that appears is a small white window with a blue icon!!!
-This is kinda a bug with wine where the byond pager dosent open by default luckily that small window 
+This is kinda a bug with wine where the byond pager dose not open by default luckily that small window 
 <br />(pictured here)<br />
 <img width="265" height="132" alt="image" src="https://github.com/user-attachments/assets/b666e741-eb86-494d-bdd1-9e7e5b20821e" />
-<br />is actully a bar icon for opening the pager just click the small blue icon and the pager will open allowing you to play your games
+<br />is actually a bar icon for opening the pager just click the small blue icon and the pager will open allowing you to play your games
 
 ## I run byond on a traditional WM (Plasma/Gnome/Cosmic/ect) and all that appears is an Icon on the task bar/BYOND fades out and doesn't open a new window after loading screen!!!
-It is kinda a bug with wine where the BYOND pager dosent open by default. Luckily, that small icon lets you open the pager by just pressing it, so just press it and you can play!
+It is kinda a bug with wine where the BYOND pager dose not open by default. Luckily, that small icon lets you open the pager by just pressing it, so just press it and you can play!
 <img width="581" height="135" alt="image" src="https://github.com/user-attachments/assets/688a4e07-c7c7-4a1f-9380-fc5ee4ac50ec" />
 
 ## The Script just fails when installing byond/VCrun!!! 
