@@ -51,12 +51,12 @@ script:
       prefix: $GAMEDIR
   - task:
       app: riched20
-      description: Installing fonts with Winetricks
+      description: Installing rich fonts with Winetricks
       name: winetricks
       prefix: $GAMEDIR
   - task:
      app: msftedit
-     description: Installing fonts with Winetricks
+     description: Installing rich fonts with Winetricks
      name: winetricks
      prefix: $GAMEDIR
       
