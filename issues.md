@@ -96,6 +96,14 @@ we do not have a real good solution for this if we are honsest but most of the t
 ## There are extra black unclosable windows on Goon / Other!!
 this is a bug in wine (https://bugs.winehq.org/show_bug.cgi?id=59932) fixed in verison 11.13. It was apprently not present in wine 9.0 but due to the lack of webview2 fixes in older versions I suggest just trying to change to a version with the nessary 11.13 fix.
 
+## Invisible text in some in-game panels (especially in Sigrogana Legend 2)
+Wine does not at the moment does not implement all RichEdit functions from windows. luckliy we can just tell wine to install the actual msftedit dll itself!
+if you want to add it to an old prefix use this command 
+```
+WINEPREFIX=/path/to/prefix winetricks riched20 msftedit
+```
+otherwise newer scripts from this repo do it automatically for new prefixes!
+
 ## If you dont see your issue here please open a issue on this repo 
 I and others really dont mind helping people getting this setup
 
