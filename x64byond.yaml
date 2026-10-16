@@ -49,7 +49,17 @@ script:
       description: Installing fonts with Winetricks
       name: winetricks
       prefix: $GAMEDIR
-
+  - task:
+      app: riched20
+      description: Installing fonts with Winetricks
+      name: winetricks
+      prefix: $GAMEDIR
+  - task:
+     app: msftedit
+     description: Installing fonts with Winetricks
+     name: winetricks
+     prefix: $GAMEDIR
+      
   - extract:
       description: Extracting Small Fonts
       file: smolfont
