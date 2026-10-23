@@ -84,6 +84,14 @@ script:
       name: winekill
       prefix: $GAMEDIR
   - task:
+      description: Setting Webview to use GPU accel and limit renderer proc to 4 (Wine Work-Around)
+      key: '*'
+      name: set_regedit
+      path: HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Edge\WebView2\AdditionalBrowserArguments
+      prefix: $GAMEDIR
+      type: REG_SZ
+      value: '--ignore-gpu-blocklist --use-gl=angle --use-angle=d3d11 --disable-direct-composition --renderer-process-limit=4 --process-per-site --disable-site-isolation-trials'
+  - task:
       args: /S
       description: Installing BYOND
       executable: installer
