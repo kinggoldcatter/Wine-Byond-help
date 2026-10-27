@@ -93,6 +93,11 @@ script:
       description: Terminating MicrosoftEdgeUpdate.exe...
       name: winekill
       prefix: $GAMEDIR
+      
+  - execute:
+      description: Sanity checking webview2..
+      command: find "$GAMEDIR/drive_c/" -iname msedgewebview2.exe | grep .
+      
   - task:
       description: Setting Webview to use GPU accel and limit renderer proc to 4 (Wine Work-Around)
       key: '*'
@@ -108,6 +113,11 @@ script:
       name: wineexec
       prefix: $GAMEDIR
       return_code: 50944
+      
+  - execute:
+      description: Sanity Checking BYOND...
+      command: find "$GAMEDIR/drive_c/" -path "*BYOND/bin/byond.exe" | grep .
+
   - task:
       args: /silent
       description: Installing BYOND packaged DirectX
