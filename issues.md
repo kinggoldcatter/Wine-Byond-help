@@ -42,6 +42,67 @@ if you have it installed make sure dxvk is enabled some older installers disable
 enabling dxvk has helped alot with fixing fps issues on team green cards but others have reported it breaking Byond completely so try it and see which one are you!<br />
 this has also been noted to sometimes cause flickering in tguis
 
+## Panels are Laggy / Typing is Slow (WebView 2 GPU Acceleration)
+So, while using Wine, WebView2 fails to detect the GPU, so it ends up turning GPU acceleration off and draws every panel, such as chat, popups, etc, via software, and on a single thread. This makes clicking in panels laggy, and even typing! So, you can force it to work with a few Chromium Flags.  Do note, this seems to have worked for me, but it requires further testing from others. So, use at your own risk! 
+
+**The flags have to go in the HKLM registry key.** Wine runs every process at a "high integrity level", and for those WebView2 ignores both the `WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS` environment variable and anything under HKCU, so neither works. Only HKLM is read.<br />
+
+Run this against your BYOND Prefix:
+```
+WINEPREFIX=~/Games/byond wine reg add 'HKLM\Software\Policies\Microsoft\Edge\WebView2\AdditionalBrowserArguments' /v '*' /t REG_SZ /d '--ignore-gpu-blocklist --use-gl=angle --use-angle=d3d11 --disable-direct-composition' /f
+```
+
+Afterward, restart your BYOND! Otherwise it won't detect correctly, or work for that matter!
+
+To check that it's working, with BYOND Open:
+```
+ps -eo args | grep -- '--type=gpu-process' | grep -oE -- '--use-(gl|angle)=[a-z0-9]+'
+```
+* `--use-angle=d3d11` means GPU acceleration is on.
+* `--use-gl=disabled` means it's still software.
+
+As a headsup, --ignore-gpu-blocklist on it's own does nothing. 
+* Tested with BYOND 516.1685 (32-bit client), wine-11.16-staging (Kron4ek), AMD RX 9070 XT on Mesa, **DXVK off** (it goes through Wine's own d3d11). Untested with DXVK on and on Nvidia. Please report!
+* GPU mode uses more RAM per webview process (~770 MB each here). If BYOND runs in a memory-capped scope (e.g. `systemd-run -p MemoryHigh=...`). There's a workaround, that I'll also list below.
+* On wine 11.15 the GPU path showed the white/black offset bar. 11.16 and 11.17 didn't have it. 11.17 has an issue though where it struggles to keep window focus. (This is not a GPU Acceleration Issue).
+
+IN THE CASE THAT IT DOES NOT WORK:
+**Undo:** `WINEPREFIX=~/Games/byond wine reg delete 'HKLM\Software\Policies\Microsoft\Edge\WebView2\AdditionalBrowserArguments' /f`<br />
+<br />
+
+## BYOND is using a ton of RAM with GPU Acceleration on (Limiting WebView2 Processes)
+So, WebView2 gives every page and embededded site it's own renderer process. Chat, Popups, Music, Embeds, etc. With GPU Acceleration on, each renderer can coast about 770MB, even though the pages are only a few MB ov Javascripts. On 10 renderes, this can ammount to 7.7 GB just for panels. 
+
+You can cap how many renderer processes WebView2 spawns so the pages share them.<br />
+<br />
+**This replaces the GPU flags, it doesn't add to them.** The registry value is one single command, so include both sets of flags in the same command:
+```bash
+WINEPREFIX=~/Games/byond wine reg add 'HKLM\Software\Policies\Microsoft\Edge\WebView2\AdditionalBrowserArguments' /v '*' /t REG_SZ /d '--ignore-gpu-blocklist --use-gl=angle --use-angle=d3d11 --disable-direct-composition --renderer-process-limit=2 --process-per-site --disable-site-isolation-trials' /f
+```
+Afterward, fully close BYOND and start it again. The flags only take effect at launch.<br />
+<br />
+**To check that it's working**, join a game, open some panels, then:
+```bash
+pgrep -fc 'msedgewebview2.*--type=renderer'
+```
+You should see around 2–3 instead of ~10.<br />
+<br />
+My results on Sigrogana Legend 2, at about the same session length:
+* Before: 10 renderers, **~9.9 GB** total for BYOND
+* After: 2 renderers, **~4.1 GB** total for BYOND
+
+**Undo** (keeps GPU acceleration, just drops the limit):
+```bash
+WINEPREFIX=~/Games/byond wine reg add 'HKLM\Software\Policies\Microsoft\Edge\WebView2\AdditionalBrowserArguments' /v '*' /t REG_SZ /d '--ignore-gpu-blocklist --use-gl=angle --use-angle=d3d11 --disable-direct-composition' /f
+```
+
+Notes:
+* Trade-off: pages now share processes, so one heavy page can make the others stutter, and sites embedded in the panels (YouTube etc.) are less isolated from each other. If panels feel worse, try `--renderer-process-limit=4` as a middle ground.
+* If BYOND runs in a memory-capped scope (e.g. `systemd-run -p MemoryHigh=...` in the Lutris command prefix), hitting the cap makes the kernel throttle it, which feels like lag. Either raise the cap or use this limit.
+* This is separate from the slow memory leak in the "Byond is using a ton of memory!" section below. It cuts the fixed per-process cost, doesn't resolve the leak! If anything, it's a patch!
+* Tested with BYOND 516.1685 (32-bit client), wine-11.16-staging, AMD/Mesa, DXVK off.
+
+
 ## Nothing is rendering!!
 not sure the cause of this but the easiest try disabling esync and fsync; exiting full-screen also seems to help sometimes. <br />
 If those did not fix it or if you want a more stable solution [ntsync](https://docs.kernel.org/next/userspace-api/ntsync.html) has been found to a fix it as well. <br />
