@@ -26,7 +26,7 @@ EOF
     echo "Registered $self as the byond url handler."
     exit 0
 fi
-
+# TODO: add more runners/checks for umu and proton
 url="${1:-}"
 [ -n "$url" ] || { echo "usage: $0 <byond-url> | --register" >&2; exit 1; }
 
