@@ -22,6 +22,9 @@ script:
   - smolfont:
       url: https://raw.githubusercontent.com/kinggoldcatter/Wine-Byond-help/master/extra/fonts/smalle.zip
       filename: smalle.zip
+  - spacehandler:
+      url: https://raw.githubusercontent.com/kinggoldcatter/Wine-Byond-help/master/extra/space-handler.sh
+      filename: space-handler.sh
 
   game:
     exe: $GAMEDIR/drive_c/Program Files (x86)/BYOND/bin/byond.exe
@@ -65,6 +68,16 @@ script:
       file: smolfont
       dst: $GAMEDIR/drive_c/windows/Fonts/
       
+  - merge:
+      description: Installing space-handler.sh into the prefix
+      src: spacehandler
+      dst: $GAMEDIR
+  - chmodx: $GAMEDIR/space-handler.sh
+
+  - execute:
+      description: Registering space-handler with the desktop (requires XDG)
+      command: '"$GAMEDIR/space-handler.sh" --register'
+
   - task:
       description: Adding Small Fonts to Registry 
       key: Small Fonts (VGA res)
