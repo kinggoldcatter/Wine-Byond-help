@@ -52,7 +52,17 @@ script:
       description: Installing fonts with Winetricks
       name: winetricks
       prefix: $GAMEDIR
-
+  - task:
+      app: riched20
+      description: Installing rich fonts with Winetricks
+      name: winetricks
+      prefix: $GAMEDIR
+  - task:
+     app: msftedit
+     description: Installing rich fonts with Winetricks
+     name: winetricks
+     prefix: $GAMEDIR
+      
   - extract:
       description: Extracting Small Fonts
       file: smolfont
@@ -78,6 +88,13 @@ script:
       value: C:\\Windows\\Fonts\\smalle.fon
 
   - task:
+      args: /install
+      description: Installing Webview2 (if nothing appears, you have to install this yourself)
+      exclude_processes: MicrosoftEdgeUpdate.exe
+      executable: webview2
+      name: wineexec
+      prefix: $GAMEDIR
+  - task:
       description: setting msedgewebview2.exe to win7 (Wine Work-Around)
       key: version
       name: set_regedit
@@ -86,16 +103,17 @@ script:
       type: REG_SZ
       value: win7
   - task:
-      args: /install
-      description: Installing Webview2 (if nothing appears, you have to install this yourself)
-      exclude_processes: MicrosoftEdgeUpdate.exe
-      executable: webview2
-      name: wineexec
-      prefix: $GAMEDIR
-  - task:
       description: Terminating MicrosoftEdgeUpdate.exe...
       name: winekill
       prefix: $GAMEDIR
+  - task:
+      description: Setting Webview to use GPU accel and limit renderer proc to 4 (Wine Work-Around)
+      key: '*'
+      name: set_regedit
+      path: HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Edge\WebView2\AdditionalBrowserArguments
+      prefix: $GAMEDIR
+      type: REG_SZ
+      value: '--ignore-gpu-blocklist --use-gl=angle --use-angle=d3d11 --disable-direct-composition --renderer-process-limit=4 --process-per-site --disable-site-isolation-trials'
   - task:
       args: /S
       description: Installing BYOND

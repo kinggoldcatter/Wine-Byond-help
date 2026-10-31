@@ -35,17 +35,78 @@ There is two solutions.<br />
 
 
 ## Mangohud does not work!
-byond is 32 bit you need the 32 bit mango hud to have it work<br />
+Byond is 32 bit you need the 32 bit mango hud to have it work<br />
 if you have it installed make sure dxvk is enabled some older installers disable it for byond
 
 ## Bad FPS on Nividia cards
 enabling dxvk has helped alot with fixing fps issues on team green cards but others have reported it breaking Byond completely so try it and see which one are you!<br />
 this has also been noted to sometimes cause flickering in tguis
 
+## Panels are Laggy / Typing is Slow (WebView 2 GPU Acceleration)
+So, while using Wine, WebView2 fails to detect the GPU, so it ends up turning GPU acceleration off and draws every panel, such as chat, popups, etc, via software, and on a single thread. This makes clicking in panels laggy, and even typing! So, you can force it to work with a few Chromium Flags.  Do note, this seems to have worked for me, but it requires further testing from others. So, use at your own risk! 
+
+**The flags have to go in the HKLM registry key.** Wine runs every process at a "high integrity level", and for those WebView2 ignores both the `WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS` environment variable and anything under HKCU, so neither works. Only HKLM is read.<br />
+
+Run this against your BYOND Prefix:
+```
+WINEPREFIX=~/Games/byond wine reg add 'HKLM\Software\Policies\Microsoft\Edge\WebView2\AdditionalBrowserArguments' /v '*' /t REG_SZ /d '--ignore-gpu-blocklist --use-gl=angle --use-angle=d3d11 --disable-direct-composition' /f
+```
+
+Afterward, restart your BYOND! Otherwise it won't detect correctly, or work for that matter!
+
+To check that it's working, with BYOND Open:
+```
+ps -eo args | grep -- '--type=gpu-process' | grep -oE -- '--use-(gl|angle)=[a-z0-9]+'
+```
+* `--use-angle=d3d11` means GPU acceleration is on.
+* `--use-gl=disabled` means it's still software.
+
+As a headsup, --ignore-gpu-blocklist on it's own does nothing. 
+* Tested with BYOND 516.1685 (32-bit client), wine-11.16-staging (Kron4ek), AMD RX 9070 XT on Mesa, **DXVK off** (it goes through Wine's own d3d11). Untested with DXVK on and on Nvidia. Please report!
+* GPU mode uses more RAM per webview process (~770 MB each here). If BYOND runs in a memory-capped scope (e.g. `systemd-run -p MemoryHigh=...`). There's a workaround, that I'll also list below.
+* On wine 11.15 the GPU path showed the white/black offset bar. 11.16 and 11.17 didn't have it. 11.17 has an issue though where it struggles to keep window focus. (This is not a GPU Acceleration Issue).
+
+IN THE CASE THAT IT DOES NOT WORK:
+**Undo:** `WINEPREFIX=~/Games/byond wine reg delete 'HKLM\Software\Policies\Microsoft\Edge\WebView2\AdditionalBrowserArguments' /f`<br />
+<br />
+
+## BYOND is using a ton of RAM with GPU Acceleration on (Limiting WebView2 Processes)
+So, WebView2 gives every page and embededded site it's own renderer process. Chat, Popups, Music, Embeds, etc. With GPU Acceleration on, each renderer can coast about 770MB, even though the pages are only a few MB ov Javascripts. On 10 renderes, this can ammount to 7.7 GB just for panels. 
+
+You can cap how many renderer processes WebView2 spawns so the pages share them.<br />
+<br />
+**This replaces the GPU flags, it doesn't add to them.** The registry value is one single command, so include both sets of flags in the same command:
+```bash
+WINEPREFIX=~/Games/byond wine reg add 'HKLM\Software\Policies\Microsoft\Edge\WebView2\AdditionalBrowserArguments' /v '*' /t REG_SZ /d '--ignore-gpu-blocklist --use-gl=angle --use-angle=d3d11 --disable-direct-composition --renderer-process-limit=2 --process-per-site --disable-site-isolation-trials' /f
+```
+Afterward, fully close BYOND and start it again. The flags only take effect at launch.<br />
+<br />
+**To check that it's working**, join a game, open some panels, then:
+```bash
+pgrep -fc 'msedgewebview2.*--type=renderer'
+```
+You should see around 2–3 instead of ~10.<br />
+<br />
+My results on Sigrogana Legend 2, at about the same session length:
+* Before: 10 renderers, **~9.9 GB** total for BYOND
+* After: 2 renderers, **~4.1 GB** total for BYOND
+
+**Undo** (keeps GPU acceleration, just drops the limit):
+```bash
+WINEPREFIX=~/Games/byond wine reg add 'HKLM\Software\Policies\Microsoft\Edge\WebView2\AdditionalBrowserArguments' /v '*' /t REG_SZ /d '--ignore-gpu-blocklist --use-gl=angle --use-angle=d3d11 --disable-direct-composition' /f
+```
+
+Notes:
+* Trade-off: pages now share processes, so one heavy page can make the others stutter, and sites embedded in the panels (YouTube etc.) are less isolated from each other. If panels feel worse, try `--renderer-process-limit=4` as a middle ground.
+* If BYOND runs in a memory-capped scope (e.g. `systemd-run -p MemoryHigh=...` in the Lutris command prefix), hitting the cap makes the kernel throttle it, which feels like lag. Either raise the cap or use this limit.
+* This is separate from the slow memory leak in the "Byond is using a ton of memory!" section below. It cuts the fixed per-process cost, doesn't resolve the leak! If anything, it's a patch!
+* Tested with BYOND 516.1685 (32-bit client), wine-11.16-staging, AMD/Mesa, DXVK off.
+
+
 ## Nothing is rendering!!
 not sure the cause of this but the easiest try disabling esync and fsync; exiting full-screen also seems to help sometimes. <br />
 If those did not fix it or if you want a more stable solution [ntsync](https://docs.kernel.org/next/userspace-api/ntsync.html) has been found to a fix it as well. <br />
-If your kernel is newer then 6.15 it is as simple as `# modprobe ntsync` and having a ntsync patched wine (the lutris script has this by default.) this will only enable it until you restart your computer but all distros have solutions for permanent module loading <br />
+If your kernel is newer then 6.15 it is as simple as `# modprobe ntsync` and having a ntsync patched wine (the Lutris script has this by default.) this will only enable it until you restart your computer but all distros have solutions for permanent module loading <br />
 <br />
 Here is some instructions for working with modules:<br />
 [Arch](https://wiki.archlinux.org/title/Kernel_module)<br />
@@ -67,25 +128,25 @@ There is two "solutions." <br />
 [Mint](https://forums.linuxmint.com/viewtopic.php?t=284301)<br />
 <br />
 
-2. if you dont care about spaceman dm breaking or using deprecated features using a 32-bit prefix will cut that 9.5 gib ram footprint in half! This may still not be enough but it is a nice savings.<br />
-scroll up to 'Installing a 32-bit prefix with lutris' and follow that.<br />
+2. if you do not care about spaceman dm breaking or using deprecated features using a 32-bit prefix will cut that 9.5 gib ram footprint in half! This may still not be enough but it is a nice savings.<br />
+scroll up to 'Installing a 32-bit prefix with Lutris' and follow that.<br />
 
 TODO: add manuel install instructions for 32-bit<br />
 TODO: make winehq bug report<br />
 
 ## I Cant reach the Client/Server/Reconnect menu!
-The button is windows only, for (some) tg and bay forks you can just press F1 on your keyboard to open it (Works in full screen as well!) 
+The button is windows only, for (some) TG and bay forks you can just press F1 on your keyboard to open it (Works in full screen as well!) 
 <br /> 
 For CM you should be able to use .options (may work for other forks? just try it)
 
 ## I run byond on a tiling WM (niri/hyperland/sway/ect) but all that appears is a small white window with a blue icon!!!
-This is kinda a bug with wine where the byond pager dosent open by default luckily that small window 
+This is kinda a bug with wine where the byond pager dose not open by default luckily that small window 
 <br />(pictured here)<br />
 <img width="265" height="132" alt="image" src="https://github.com/user-attachments/assets/b666e741-eb86-494d-bdd1-9e7e5b20821e" />
-<br />is actully a bar icon for opening the pager just click the small blue icon and the pager will open allowing you to play your games
+<br />is actually a bar icon for opening the pager just click the small blue icon and the pager will open allowing you to play your games
 
 ## I run byond on a traditional WM (Plasma/Gnome/Cosmic/ect) and all that appears is an Icon on the task bar/BYOND fades out and doesn't open a new window after loading screen!!!
-It is kinda a bug with wine where the BYOND pager dosent open by default. Luckily, that small icon lets you open the pager by just pressing it, so just press it and you can play!
+It is kinda a bug with wine where the BYOND pager dose not open by default. Luckily, that small icon lets you open the pager by just pressing it, so just press it and you can play!
 <img width="581" height="135" alt="image" src="https://github.com/user-attachments/assets/688a4e07-c7c7-4a1f-9380-fc5ee4ac50ec" />
 
 ## The Script just fails when installing byond/VCrun!!! 
@@ -96,5 +157,41 @@ we do not have a real good solution for this if we are honsest but most of the t
 ## There are extra black unclosable windows on Goon / Other!!
 this is a bug in wine (https://bugs.winehq.org/show_bug.cgi?id=59932) fixed in verison 11.13. It was apprently not present in wine 9.0 but due to the lack of webview2 fixes in older versions I suggest just trying to change to a version with the nessary 11.13 fix.
 
+## Invisible text in some in-game panels (especially in Sigrogana Legend 2)
+Wine does not at the moment does not implement all RichEdit functions from windows. luckliy we can just tell wine to install the actual msftedit dll itself!
+if you want to add it to an old prefix use this command 
+```
+WINEPREFIX=/path/to/prefix winetricks riched20 msftedit
+```
+otherwise newer scripts from this repo do it automatically for new prefixes!
+
 ## If you dont see your issue here please open a issue on this repo 
 I and others really dont mind helping people getting this setup
+
+# Visual studio code development issues
+
+## Everything compiles but it closes immediatly when launching without an error.
+Extension cant find wine prefix
+* follow steps 1 - 4 from [Setting up launch json](README.md#launchjson-and-correct-wine-prefix) to add correct prefix.
+* to verify the path atleast exist, try 
+    ```bash
+    ls "<insert path in quotes here>"
+    ```
+
+##  Could not find the task 'dm: build - name.dme'
+Extension cant find byond directory.
+* follow steps 2 - 6 in [extensions and settings](README.md#setting-up-visual-studio-code-develeopment) to set correct byond path.
+* to verify the path atleast exist, try 
+    ```bash
+    ls "<insert path in quotes here>"
+    ```
+
+## execvp(3) failed.: No such file or directory
+binfmt.d cant find the correct wine path.
+* Make sure /etc/binfmt.d/wine.conf follows the correct format **:DOSWIN:M::MZ::/your/path/bin/wine:** - mind the colon at the end.
+* use absolute pathing only. ~/..../bin/wine -> **/var/home/username**/..../bin/wine
+* see if wine is installed differently with:
+    ```bash
+    which wine
+    ```
+* If installing wine from lutris, then use the correct path to it. Usually there are a few options in **~/.local/lutris/runners/wine/**. pick the one used to setup byond. Remember to **remove ~ and replace with absolute homefolder path**
