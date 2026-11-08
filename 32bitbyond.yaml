@@ -25,6 +25,9 @@ script:
   - spacehandler:
         url: https://raw.githubusercontent.com/kinggoldcatter/Wine-Byond-help/master/extra/space-handler.sh
         filename: space-handler.sh
+  - NT-ID:
+        url: https://raw.githubusercontent.com/kinggoldcatter/Wine-Byond-help/master/extra/NT-ID.sh
+        filename: NT-ID.sh
  
   game:
     arch: win32
@@ -38,6 +41,14 @@ script:
         need mono
       name: create_prefix
       prefix: $GAMEDIR
+  - task:
+      description: Stopping Wine before Applying Changes
+      name: winekill
+      prefix: $GAMEDIR
+  - execute:
+      description: applying NT-ID to the prefix ()
+      file: NT-ID
+      args: '"$GAMEDIR"'
   - task:
       arch: win32
       app: vcrun2022
@@ -72,14 +83,14 @@ script:
       dst: $GAMEDIR/drive_c/windows/Fonts/
       
   - merge:
-      description: Installing space-handler.sh into the prefix
+      description: Installing space-handler.sh into the prefix for byond links
       src: spacehandler
       dst: $GAMEDIR
 
   - chmodx: $GAMEDIR/space-handler.sh
 
   - execute:
-      description: Registering space-handler with the desktop (requires XDG)
+      description: Registering space-handler as the handler for byond links (requires XDG)
       command: '"$GAMEDIR/space-handler.sh" --register'
 
   - task:
