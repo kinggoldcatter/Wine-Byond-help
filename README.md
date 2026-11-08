@@ -25,6 +25,10 @@ TODO: add guides for bottles and other installers<br />
 
 # [Trouble shooting tips](issues.md)
 
+## NT-ID
+
+NT-ID saves an identifier used for BYOND’s CID, helping keep it consistent across reinstalls and reduce the risk of false bans. If the saved file is deleted, it will be recreated the next time NT-ID runs, but the identifier may change
+
 
 # Setting up Visual Studio Code develeopment.
 Byond on wine works well enough for development. 
