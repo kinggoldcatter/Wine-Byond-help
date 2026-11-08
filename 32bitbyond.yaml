@@ -83,7 +83,7 @@ script:
       dst: $GAMEDIR/drive_c/windows/Fonts/
       
   - merge:
-      description: Installing space-handler.sh into the prefix
+      description: Installing space-handler.sh into the prefix for byond links
       src: spacehandler
       dst: $GAMEDIR
 
