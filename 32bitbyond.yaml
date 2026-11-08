@@ -90,7 +90,7 @@ script:
   - chmodx: $GAMEDIR/space-handler.sh
 
   - execute:
-      description: Registering space-handler with the desktop (requires XDG)
+      description: Registering space-handler as the handler for byond links (requires XDG)
       command: '"$GAMEDIR/space-handler.sh" --register'
 
   - task:
