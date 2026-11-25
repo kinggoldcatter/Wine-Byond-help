@@ -33,7 +33,7 @@ script:
         filename: NT-ID.sh
  
   system:
-    prelaunch_command: '"$GAMEDIR/space-watchdog.sh"'
+    prelaunch_command: $GAMEDIR/space-watchdog.sh
     prelaunch_wait: false
 
   game:
