@@ -29,6 +29,14 @@ TODO: add guides for bottles and other installers<br />
 
 NT-ID saves an identifier used for BYOND’s CID, helping keep it consistent across reinstalls and reduce the risk of false bans. If the saved file is deleted, it will be recreated the next time NT-ID runs, but the identifier may change
 
+## Space watchdog
+
+The Lutris installers place `space-watchdog.sh` in the root of the BYOND Wine
+prefix, alongside `space-handler.sh`, and configure it as the Lutris
+**Pre-launch script**. **Wait for pre-launch script completion** is disabled so
+the watchdog can keep running while BYOND is open. It waits for BYOND to start,
+then closes leftover Edge/WebView processes after BYOND exits.
+
 
 # Setting up Visual Studio Code develeopment.
 Byond on wine works well enough for development. 

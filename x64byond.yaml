@@ -25,9 +25,16 @@ script:
   - spacehandler:
       url: https://raw.githubusercontent.com/kinggoldcatter/Wine-Byond-help/master/extra/space-handler.sh
       filename: space-handler.sh
+  - spacewatchdog:
+      url: https://raw.githubusercontent.com/kinggoldcatter/Wine-Byond-help/master/extra/space-watchdog.sh
+      filename: space-watchdog.sh
   - NT-ID:
       url: https://raw.githubusercontent.com/kinggoldcatter/Wine-Byond-help/master/extra/NT-ID.sh
       filename: NT-ID.sh
+
+  system:
+    prelaunch_command: '"$GAMEDIR/space-watchdog.sh"'
+    prelaunch_wait: false
 
   game:
     exe: $GAMEDIR/drive_c/Program Files (x86)/BYOND/bin/byond.exe
@@ -84,6 +91,12 @@ script:
       src: spacehandler
       dst: $GAMEDIR
   - chmodx: $GAMEDIR/space-handler.sh
+
+  - merge:
+      description: Installing space-watchdog.sh into the prefix
+      src: spacewatchdog
+      dst: $GAMEDIR
+  - chmodx: $GAMEDIR/space-watchdog.sh
 
   - execute:
       description: Registering space-handler as the handler for byond links (requires XDG)
