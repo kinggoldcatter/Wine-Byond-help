@@ -30,6 +30,7 @@ from __future__ import annotations
 import argparse
 import os
 import shutil
+import struct
 import sys
 import tempfile
 
@@ -37,6 +38,7 @@ try:
     from fontTools.ttLib import TTFont
     from fontTools.pens.ttGlyphPen import TTGlyphPen
     from fontTools.pens.transformPen import TransformPen
+    from fontTools.pens.recordingPen import DecomposingRecordingPen
     from fontTools.misc.transform import Transform
     from fontTools.ttLib.tables._c_m_a_p import CmapSubtable
 except ImportError:
@@ -132,13 +134,38 @@ def load_source(path, label):
 
 def glyph_add(font, name, source_glyph_set, scale, source_hmtx):
     pen = TTGlyphPen(None)
-    if scale != 1.0:
-        source_glyph_set[name].draw(TransformPen(pen, Transform(scale, 0, 0, scale, 0, 0)))
-    else:
-        source_glyph_set[name].draw(pen)
+    target = TransformPen(pen, Transform(scale, 0, 0, scale, 0, 0)) if scale != 1.0 else pen
+    # Decompose composite glyphs first: TTGlyphPen(None) cannot resolve component
+    # glyphs, so drawing a composite directly raises and the glyph would be
+    # silently dropped (this lost ~68 math and ~10 emoji glyphs before).
+    drp = DecomposingRecordingPen(source_glyph_set)
+    source_glyph_set[name].draw(drp)
+    drp.replay(target)
     glyph = pen.glyph()
     advance, lsb = source_hmtx[name]
     return glyph, (round(advance * scale), round(lsb * scale))
+
+
+def finalize_glyph_tables(base, order, hmtx, added):
+    """Sync glyph order / metrics bookkeeping after appending glyphs.
+
+    hhea.numberOfHMetrics MUST equal len(hmtx.metrics) or trailing glyphs reuse
+    the previous advance width; post (format 2) must carry the new order too."""
+    base.setGlyphOrder(order)
+    base["maxp"].numGlyphs = len(order)
+    if "hhea" in base:
+        base["hhea"].numberOfHMetrics = len(hmtx.metrics)
+    if "post" in base and getattr(base["post"], "formatType", 3.0) == 2.0:
+        base["post"].glyphOrder = order
+    if "OS/2" in base and added:
+        os2 = base["OS/2"]
+        os2.usFirstCharIndex = min([os2.usFirstCharIndex] + [min(added)])
+        os2.usLastCharIndex = max([os2.usLastCharIndex] + [min(0xFFFF, max(added))])
+    glyf = base["glyf"]
+    for gname in order:
+        g = glyf.glyphs.get(gname)
+        if g is not None and hasattr(g, "recalcBounds"):
+            g.recalcBounds(glyf)
 
 
 def merged_font(base_path, sources, extra_chars):
@@ -193,22 +220,7 @@ def merged_font(base_path, sources, extra_chars):
         per_source[label] = count
         src.close()
 
-    base.setGlyphOrder(order)
-    base["maxp"].numGlyphs = len(order)
-    if "hhea" in base:
-        base["hhea"].numberOfHMetrics = len(hmtx.metrics)
-    if "post" in base and getattr(base["post"], "formatType", 3.0) == 2.0:
-        base["post"].glyphOrder = order
-    if "OS/2" in base:
-        os2 = base["OS/2"]
-        if added:
-            os2.usFirstCharIndex = min([os2.usFirstCharIndex] + [min(added)])
-            os2.usLastCharIndex = max([os2.usLastCharIndex] + [min(0xFFFF, max(added))])
-    # Recompute per-glyph bounds now that glyphs exist.
-    for gname in order:
-        g = glyf.glyphs.get(gname)
-        if g is not None and hasattr(g, "recalcBounds"):
-            g.recalcBounds(glyf)
+    finalize_glyph_tables(base, order, hmtx, added)
     return base, added, per_source
 
 
@@ -234,15 +246,10 @@ def save_with_retries(font, out_path):
         try:
             font.save(out_path)
             return
-        except (KeyError, IndexError, AssertionError, ValueError, struct_error()) as err:
+        except (KeyError, IndexError, AssertionError, ValueError, struct.error) as err:
             if not drop_problem_tables(font, err):
                 raise
     font.save(out_path)
-
-
-def struct_error():
-    import struct
-    return struct.error
 
 
 def font_dir(prefix):
@@ -312,7 +319,15 @@ def cmd_patch(args):
         out = tempfile.NamedTemporaryFile(
             dir=fdir, prefix=f".{name}.", suffix=".tmp", delete=False)
         out.close()
-        save_with_retries(merged, out.name)
+        try:
+            save_with_retries(merged, out.name)
+        except Exception:
+            merged.close()
+            try:
+                os.unlink(out.name)      # never leave a partial temp in Fonts/
+            except OSError:
+                pass
+            raise
         merged.close()
         os.replace(out.name, path)  # replaces symlink itself, not its target
         os.chmod(path, 0o644)
@@ -344,7 +359,7 @@ def merged_font_with_extra(base_path, sources, extra_chars):
     extra_fonts = []
     for label in ordered:
         try:
-            extra_fonts.append((label, TTFont(real_sources[label], lazy=False, fontNumber=0)))
+            extra_fonts.append((label, load_source(real_sources[label], label)))
         except Exception:
             pass
 
@@ -384,8 +399,7 @@ def merged_font_with_extra(base_path, sources, extra_chars):
     for _, src in extra_fonts:
         src.close()
     per_source["extra"] = extra_added
-    base.setGlyphOrder(order)
-    base["maxp"].numGlyphs = len(order)
+    finalize_glyph_tables(base, order, hmtx, added)
     return base, added, per_source
 
 
