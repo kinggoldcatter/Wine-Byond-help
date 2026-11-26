@@ -146,7 +146,7 @@ This is kinda a bug with wine where the byond pager dose not open by default luc
 <br />is actually a bar icon for opening the pager just click the small blue icon and the pager will open allowing you to play your games
 
 ## I run byond on Hyprland, and keep having white flashes when resizing windows
-This bug is caused by incorrect resizing sync support for xwayland. I've built a [fork of hyprland](https://github.com/Greencus/Hyprland_NET_WM_SYNC_REQUEST/tree/feature/xwayland-sync-request) that implements the sync fix. Don't expect this to get patched into upstream hyprland, vaxry has expressed that he does not wish to maintain the feature in a previous bug report.
+This bug is caused by incorrect resizing sync support for xwayland. There is a third party [fork of hyprland](https://github.com/Greencus/Hyprland_NET_WM_SYNC_REQUEST/tree/feature/xwayland-sync-request) that implements the sync fix. Don't expect this to get patched into upstream hyprland, vaxry has expressed that he does not wish to maintain the feature in a previous bug report. This is not managed by the repo owners, please make sure you trust anything you run.
 
 ## I run byond on a traditional WM (Plasma/Gnome/Cosmic/ect) and all that appears is an Icon on the task bar/BYOND fades out and doesn't open a new window after loading screen!!!
 It is kinda a bug with wine where the BYOND pager dose not open by default. Luckily, that small icon lets you open the pager by just pressing it, so just press it and you can play!
