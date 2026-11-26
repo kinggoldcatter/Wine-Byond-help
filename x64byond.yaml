@@ -28,6 +28,21 @@ script:
   - NT-ID:
       url: https://raw.githubusercontent.com/kinggoldcatter/Wine-Byond-help/master/extra/NT-ID.sh
       filename: NT-ID.sh
+  - fontpatch:
+      url: https://raw.githubusercontent.com/kinggoldcatter/Wine-Byond-help/master/extra/byond-font-patch.py
+      filename: byond-font-patch.py
+  - egyptfont:
+      url: https://raw.githubusercontent.com/google/fonts/main/ofl/notosansegyptianhieroglyphs/NotoSansEgyptianHieroglyphs-Regular.ttf
+      filename: NotoSansEgyptianHieroglyphs-Regular.ttf
+  - runicfont:
+      url: https://raw.githubusercontent.com/google/fonts/main/ofl/notosansrunic/NotoSansRunic-Regular.ttf
+      filename: NotoSansRunic-Regular.ttf
+  - emojifont:
+      url: https://raw.githubusercontent.com/google/fonts/main/ofl/notoemoji/NotoEmoji%5Bwght%5D.ttf
+      filename: NotoEmoji-Regular.ttf
+  - symbolafont:
+      url: https://fontlibrary.org/api/catalogue/symbola/download
+      filename: symbola.zip
 
   game:
     exe: $GAMEDIR/drive_c/Program Files (x86)/BYOND/bin/byond.exe
@@ -73,7 +88,17 @@ script:
      description: Installing rich fonts with Winetricks
      name: winetricks
      prefix: $GAMEDIR
-      
+
+  - execute:
+      description: Patching WebView2 core fonts with hieroglyph/runic/emoji/math glyphs (needs python-fonttools)
+      command: >-
+        unzip -oq "$GAMEDIR/symbola.zip" Symbola_hint.ttf -d "$GAMEDIR" 2>/dev/null || true;
+        python3 "$GAMEDIR/byond-font-patch.py" --prefix "$GAMEDIR"
+        --egypt "$GAMEDIR/NotoSansEgyptianHieroglyphs-Regular.ttf"
+        --runic "$GAMEDIR/NotoSansRunic-Regular.ttf"
+        --emoji "$GAMEDIR/NotoEmoji-Regular.ttf"
+        --math "$GAMEDIR/Symbola_hint.ttf" --verify || true
+
   - extract:
       description: Extracting Small Fonts
       file: smolfont
