@@ -19,10 +19,21 @@ script:
   - webview2:
         url: https://go.microsoft.com/fwlink/?linkid=2099617
         filename: MicrosoftEdgeWebView2RuntimeInstallerX86.exe
+  - smolfont:
+        url: https://raw.githubusercontent.com/kinggoldcatter/Wine-Byond-help/master/extra/fonts/smalle.zip
+        filename: smalle.zip
+  - spacehandler:
+        url: https://raw.githubusercontent.com/kinggoldcatter/Wine-Byond-help/master/extra/space-handler.sh
+        filename: space-handler.sh
+  - NT-ID:
+        url: https://raw.githubusercontent.com/kinggoldcatter/Wine-Byond-help/master/extra/NT-ID.sh
+        filename: NT-ID.sh
+ 
   game:
     arch: win32
     exe: $GAMEDIR/drive_c/Program Files/BYOND/bin/byond.exe
     prefix: $GAMEDIR
+
   installer:
   - task:
       arch: win32
@@ -30,6 +41,14 @@ script:
         need mono
       name: create_prefix
       prefix: $GAMEDIR
+  - task:
+      description: Stopping Wine before Applying Changes
+      name: winekill
+      prefix: $GAMEDIR
+  - execute:
+      description: applying NT-ID to the prefix ()
+      file: NT-ID
+      args: '"$GAMEDIR"'
   - task:
       arch: win32
       app: vcrun2022
@@ -47,6 +66,43 @@ script:
       description: Installing fonts with Winetricks
       name: winetricks
       prefix: $GAMEDIR
+  - task:
+      app: riched20
+      description: Installing rich fonts with Winetricks
+      name: winetricks
+      prefix: $GAMEDIR
+  - task:
+     app: msftedit
+     description: Installing rich fonts with Winetricks
+     name: winetricks
+     prefix: $GAMEDIR
+
+  - extract:
+      description: Extracting Small Fonts
+      file: smolfont
+      dst: $GAMEDIR/drive_c/windows/Fonts/
+      
+  - merge:
+      description: Installing space-handler.sh into the prefix for byond links
+      src: spacehandler
+      dst: $GAMEDIR
+
+  - chmodx: $GAMEDIR/space-handler.sh
+
+  - execute:
+      description: Registering space-handler as the handler for byond links (requires XDG)
+      command: '"$GAMEDIR/space-handler.sh" --register'
+
+  - task:
+      description: Adding Small Fonts to Registry 
+      key: Small Fonts (VGA res)
+      name: set_regedit
+      path: HKEY_LOCAL_MACHINE\Software\Microsoft\Windows NT\CurrentVersion\Fonts
+      prefix: $GAMEDIR
+      type: REG_SZ
+      value: C:\\Windows\\Fonts\\smalle.fon
+     
+
   - task:
       arch: win32
       description: setting msedgewebview2.exe to win7
@@ -68,6 +124,15 @@ script:
       description: Terminating MicrosoftEdgeUpdate.exe...
       name: winekill
       prefix: $GAMEDIR
+  - task:
+      arch: win32
+      description: Setting Webview to use GPU accel and limit renderer proc to 4 (Wine Work-Around)
+      key: '*'
+      name: set_regedit
+      path: HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Edge\WebView2\AdditionalBrowserArguments
+      prefix: $GAMEDIR
+      type: REG_SZ
+      value: '--ignore-gpu-blocklist --use-gl=angle --use-angle=d3d11 --disable-direct-composition --renderer-process-limit=4 --process-per-site --disable-site-isolation-trials'
   - task:
       arch: win32
       args: /S
