@@ -26,6 +26,36 @@ log() {
     printf '[%s] %s\n' "$(date '+%Y-%m-%d %H:%M:%S')" "$*"
 }
 
+CAPTURE_FILE=""
+CAPTURE_OUTPUT=""
+
+cleanup_capture_file() {
+    [ -n "$CAPTURE_FILE" ] || return 0
+    if rm -f -- "$CAPTURE_FILE"; then
+        CAPTURE_FILE=""
+    else
+        log "WARNING: could not remove temporary output file: $CAPTURE_FILE" >&2
+        return 1
+    fi
+}
+
+trap cleanup_capture_file EXIT
+
+run_wine_capture() {
+    local status
+    CAPTURE_OUTPUT=""
+    CAPTURE_FILE="$(mktemp "${TMPDIR:-/tmp}/space-watchdog.XXXXXX")" || {
+        log "ERROR: could not create temporary output file." >&2
+        return 1
+    }
+    WINEPREFIX="$target_prefix" WINEDEBUG="${WINEDEBUG:--all}" \
+        "$wine_bin" "$@" >"$CAPTURE_FILE" 2>&1
+    status=$?
+    CAPTURE_OUTPUT="$(<"$CAPTURE_FILE")"
+    cleanup_capture_file
+    return "$status"
+}
+
 log_pids() {
     local message="$1" pid pid_list=""
     shift
@@ -190,9 +220,12 @@ scan_prefix_processes() {
 
     # tasklist runs inside the selected prefix, so its Windows process list
     # excludes host-side Lutris wrappers. Its CSV PIDs are used with taskkill.
-    output="$(WINEPREFIX="$target_prefix" WINEDEBUG="${WINEDEBUG:--all}" \
-        "$wine_bin" "$tasklist_exe" /fo csv /nh 2>&1)"
-    status=$?
+    if run_wine_capture "$tasklist_exe" /fo csv /nh; then
+        status=0
+    else
+        status=$?
+    fi
+    output="$CAPTURE_OUTPUT"
     if [ "$status" -ne 0 ]; then
         log "ERROR: tasklist failed with status $status: $output" >&2
         return 1
@@ -221,13 +254,19 @@ taskkill_process() {
     local pid="$1" force="${2:-}" output status
     # Graceful and forced requests target the Windows PID from tasklist.
     if [ -n "$force" ]; then
-        output="$(WINEPREFIX="$target_prefix" WINEDEBUG="${WINEDEBUG:--all}" \
-            "$wine_bin" "$taskkill_exe" /F /PID "$pid" 2>&1)"
+        if run_wine_capture "$taskkill_exe" /F /PID "$pid"; then
+            status=0
+        else
+            status=$?
+        fi
     else
-        output="$(WINEPREFIX="$target_prefix" WINEDEBUG="${WINEDEBUG:--all}" \
-            "$wine_bin" "$taskkill_exe" /PID "$pid" 2>&1)"
+        if run_wine_capture "$taskkill_exe" /PID "$pid"; then
+            status=0
+        else
+            status=$?
+        fi
     fi
-    status=$?
+    output="$CAPTURE_OUTPUT"
     if [ "$status" -eq 0 ]; then
         return 0
     fi
@@ -323,7 +362,7 @@ done
 
 scan_prefix_processes || exit 1
 if [ "${#edge_pids[@]}" -eq 0 ]; then
-    log "No Edge/WebView PIDs remain after the close request."
+    log "No Edge/WebView PIDs remain, cleanup complete."
     exit 0
 fi
 if [ "${#taskkill_failures[@]}" -gt 0 ]; then
